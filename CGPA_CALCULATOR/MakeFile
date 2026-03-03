@@ -1,1 +1,31 @@
+CXX      := g++
+CXXFLAGS := -Wall -Wextra -std=c++17 -Iinclude
+TARGET   := cgpa_calc
 
+SRC_DIR  := src
+MAIN_DIR := main
+OBJ_DIR  := obj
+
+
+SOURCES  := $(wildcard $(SRC_DIR)/*.cpp) $(wildcard $(MAIN_DIR)/*.cpp)
+OBJECTS  := $(patsubst %.cpp, $(OBJ_DIR)/%.o, $(notdir $(SOURCES)))
+
+
+all: $(TARGET)
+
+$(TARGET): $(OBJECTS)
+	$(CXX) $(CXXFLAGS) $^ -o $@
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/%.o: $(MAIN_DIR)/%.cpp | $(OBJ_DIR)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
+
+clean:
+	rm -rf $(OBJ_DIR) $(TARGET)
+
+.PHONY: all clean
